@@ -28,14 +28,20 @@ class ProcessSalaries(ProcessJobs):
 
     def matches_salary_range(self, job: Dict, salary: Union[int, str]) -> bool:
         def is_valid_salary(salary):
-            return isinstance(salary, (int, str)) and (isinstance(salary, int) or salary.isdigit())
+            istance_int_str = isinstance(salary, (int, str))
+            istance_int = isinstance(salary, int)
+            return istance_int_str and (istance_int or salary.isdigit())
 
         if 'min_salary' not in job or 'max_salary' not in job:
             raise ValueError("Min or Max salary is not defined")
 
         min_salary, max_salary = job["min_salary"], job["max_salary"]
 
-        if not (is_valid_salary(min_salary) and is_valid_salary(max_salary) and is_valid_salary(salary)):
+        valid_min = is_valid_salary(min_salary)
+        valid_max = is_valid_salary(max_salary)
+        valid_salary = is_valid_salary(salary)
+
+        if not (valid_min and valid_max and valid_salary):
             raise ValueError("Salary must be a number (int or repr of int)")
 
         if int(max_salary) < int(min_salary):
